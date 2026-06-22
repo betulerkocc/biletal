@@ -95,7 +95,7 @@ async def health():
     redis_ok = await cache.ping()
     rabbit_ok = await mq.is_connected()
 
-    durum = "saglikli" if (mongo_ok and redis_ok) else "kismi"
+    durum = "saglikli" if (mongo_ok and redis_ok and rabbit_ok) else "kismi"
     return {
         "durum": durum,
         "servisler": {

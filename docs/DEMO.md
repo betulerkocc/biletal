@@ -48,8 +48,10 @@ cache'leniyor; ilk istek MongoDB'den (MISS), tekrarlar Redis'ten (HIT) geliyor.�
 
 **Göster (terminalden, isteğe bağlı güçlü kanıt):**
 ```bash
-docker exec obilet-redis redis-cli KEYS 'seferler:*'   # cache anahtarları
-curl -s -D- "http://localhost:8000/api/seferler" -o /dev/null | grep X-Cache
+docker exec obilet-redis redis-cli FLUSHALL                                   # cache'i temizle
+curl -s -D- "http://localhost:8000/api/seferler" -o /dev/null | grep X-Cache  # 1. çağrı → MISS
+curl -s -D- "http://localhost:8000/api/seferler" -o /dev/null | grep X-Cache  # 2. çağrı → HIT
+docker exec obilet-redis redis-cli KEYS 'seferler:*'                          # oluşan cache anahtarları
 ```
 
 ---
@@ -96,7 +98,7 @@ yanıtı göster. (Hoca: “isteğin gittiği ve işlemin gerçekleştiği net g
 | Gereksinim | Nerede kanıtlanır |
 |---|---|
 | Microservices (3+ katman) | `docker compose ps` — 6 servis |
-| MongoDB + Volume | `docker volume ls \| grep mongo_data`, veriler kalıcı |
+| MongoDB + Volume | `docker volume ls \| grep obilet_mongo_data`, veriler kalıcı |
 | FastAPI 10 REST uç noktası | `http://localhost:8000/docs` |
 | Swagger dokümantasyon | `/docs` |
 | React Native/Expo frontend | `http://localhost:8082` / emülatör |

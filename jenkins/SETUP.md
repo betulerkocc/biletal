@@ -26,7 +26,7 @@ docker compose -f docker-compose.jenkins.yml up -d --build
 4. **Console Output**'ta `docker compose up`, `/health` çıktısı ve
    tüm REST testlerinin geçtiği canlı görünür.
 
-Pipeline bithat bitince tüm servisler (mongo/redis/rabbitmq/backend/worker/
+Pipeline bitince tüm servisler (mongo/redis/rabbitmq/backend/worker/
 frontend) Docker üzerinde ayakta olur — yani CI/CD hem **derler** hem **deploy** eder.
 
 ## 3) GitHub Webhook (otomatik tetikleme) — opsiyonel

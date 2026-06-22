@@ -21,6 +21,9 @@ jobs:
   - script: >
       pipelineJob('obilet-ci') {
         description('Obilet Mikroservis CI/CD — Checkout -> Build&Deploy (Docker) -> Health Check -> Smoke Test')
+        triggers {
+          githubPush()        // "GitHub hook trigger for GITScm polling" — job'da kayıtlı/görünür
+        }
         definition {
           cpsScm {
             scm {

@@ -161,7 +161,7 @@ cd jenkins && docker compose -f docker-compose.jenkins.yml up -d --build
 obiletproject/
 ├── docker-compose.yml          # tüm servisler (mongo/redis/rabbitmq/backend/worker/frontend)
 ├── Jenkinsfile                 # CI/CD pipeline
-├── backend/                    # FastAPI (app/main.py, routers/, cache.py, mq.py, database.py)
+├── backend/                    # FastAPI (app/main.py, app/routers/, app/cache.py, app/mq.py, app/database.py)
 ├── worker/                     # RabbitMQ tüketici (bildirim worker'ı)
 ├── frontend/                   # React Native / Expo (App.tsx, src/screens/...)
 ├── jenkins/                    # Docker erişimli özel Jenkins (Dockerfile, casc.yaml, SETUP.md)

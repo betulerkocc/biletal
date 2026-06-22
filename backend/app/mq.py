@@ -57,4 +57,7 @@ async def publish_ticket_event(payload: dict) -> bool:
 
 
 async def is_connected() -> bool:
-    return bool(mq.connection and not mq.connection.is_closed)
+    return bool(
+        mq.connection and not mq.connection.is_closed
+        and mq.channel and not mq.channel.is_closed
+    )
