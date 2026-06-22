@@ -13,8 +13,10 @@ pipeline {
 
     environment {
         COMPOSE_PROJECT_NAME = 'obilet'
-        BASE_URL  = 'http://localhost:8000'
-        FRONT_URL = 'http://localhost:8082'
+        // Jenkins konteynerinden host'ta yayınlanan portlara erişim için
+        // host.docker.internal kullanılır (compose'da host-gateway tanımlı).
+        BASE_URL  = 'http://host.docker.internal:8000'
+        FRONT_URL = 'http://host.docker.internal:8082'
     }
 
     options {

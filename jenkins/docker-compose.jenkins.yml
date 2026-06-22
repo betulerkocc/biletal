@@ -10,6 +10,8 @@ services:
     container_name: obilet-jenkins
     user: root                       # docker.sock erişimi için
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # host'ta yayınlanan portlara erişim
     ports:
       - "8091:8080"                  # Jenkins arayüzü (8090 başka projede dolu)
       - "50001:50000"

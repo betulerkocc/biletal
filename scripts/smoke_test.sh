@@ -68,7 +68,13 @@ YN=$(curl -s "$BASE/api/yolcular" | jq -r .adet); echo "  yolcu sayısı: $YN"
 [ "$YN" -gt 0 ] && pass "Yolcular listelendi" || fail "Yolcu yok"
 
 hdr "[7] POST /api/biletler — BİLET AL (RabbitMQ olayı yayınlanır)"
-SEAT=$(( (RANDOM % 38) + 1 ))
+# Boş bir koltuk seç (sefer detayındaki dolu_koltuklar'a bakarak) — tekrar koşularda da sağlam
+DETAY=$(curl -s "$BASE/api/seferler/$SEFER_ID"); DOLU=$(echo "$DETAY" | jq -c '.dolu_koltuklar')
+SEAT=1
+for n in $(seq 1 40); do
+  if ! echo "$DOLU" | jq -e "index($n)" >/dev/null 2>&1; then SEAT=$n; break; fi
+done
+echo "  seçilen boş koltuk: $SEAT"
 B=$(curl -s -X POST "$BASE/api/biletler" -H 'Content-Type: application/json' \
   -d "{\"sefer_id\":\"$SEFER_ID\",\"koltuk_no\":$SEAT,\"yolcu_id\":\"$YID\"}")
 echo "$B" | jq '{pnr, koltuk_no, durum, rabbitmq_published, mesaj}'
