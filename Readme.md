@@ -1,10 +1,68 @@
-# 🚌 Obilet — Otobüs Bileti Otomasyon Sistemi
+# Biletal — Otobüs Bileti Otomasyon Sistemi
 
-Mikroservis tabanlı bir **otobüs bilet satış / sefer yönetimi / yolcu kayıt**
-prototipi. Bir otobüs firmasının dijital bilet süreçlerini uçtan uca modeller.
+> Mikroservis tabanlı bir **otobüs bilet satış / sefer yönetimi / yolcu kayıt**
+> prototipi. Bir otobüs firmasının bilet süreçlerini uçtan uca dijitalleştirir.
 
-> Yazılım Mühendisliği Final Projesi — MongoDB · FastAPI · React Native (Expo) ·
-> Docker Compose · Jenkins CI/CD · **RabbitMQ** · **Redis**
+---
+
+## Proje Hakkında
+
+![Ürün Tanıtım Görseli](Product.png)
+
+**Proje Tanımı:**
+> Biletal; bir otobüs firmasının bilet satış, sefer yönetimi ve yolcu kayıt
+> süreçlerini dijitalleştiren **mikroservis tabanlı bir Otobüs Bileti Otomasyon
+> Sistemi** prototipidir. Kullanıcılar mobil uyumlu arayüz üzerinden şehirler
+> arası seferleri arar, koltuk haritasından koltuk seçer, yolcu bilgilerini
+> kaydeder ve bilet satın alır. Bilet alındığında sistem, yolcuya gönderilecek
+> bildirimi bir mesaj kuyruğuna bırakır; arka planda çalışan ayrı bir servis bu
+> bildirimi (SMS / e-posta simülasyonu) işler. Sefer arama sonuçları, yükü
+> azaltmak için önbelleğe alınır. Tüm bileşenler Docker üzerinde tek komutla
+> ayağa kalkar ve Jenkins ile sürekli entegrasyon/dağıtım (CI/CD) yapılır.
+
+**Proje Kategorisi:**
+> Ulaşım / Online Bilet Satış (Seyahat Teknolojileri)
+
+**Referans Uygulama:**
+> [Obilet](https://www.obilet.com) — Türkiye'nin önde gelen online otobüs/uçak
+> bileti satış platformu.
+
+---
+
+## Proje Linkleri
+
+> Proje **yerel Docker ortamında** çalışır (derste yerel çalıştırma yeterlidir).
+
+- **REST API Adresi (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Web Frontend Adresi:** [http://localhost:8082](http://localhost:8082)
+- **RabbitMQ Yönetim Arayüzü:** [http://localhost:15672](http://localhost:15672) (guest / guest)
+- **Jenkins CI/CD:** [http://localhost:8091](http://localhost:8091) (admin / admin)
+- **Kaynak Kod:** [github.com/betulerkocc/biletal](https://github.com/betulerkocc/biletal)
+
+---
+
+## Proje Ekibi
+
+**Grup Adı:** Biletal
+
+**Ekip Üyeleri:**
+- Betül Erkoç (Grup Lideri — Tam Yığın: REST API · Mobil · Web · Mobil Backend)
+
+> Tek kişilik proje: 10 gereksinim, doğrudan 10 REST API uç noktasına karşılık gelir.
+
+---
+
+## Dokümantasyon
+
+Proje dokümantasyonuna aşağıdaki linklerden erişebilirsiniz:
+
+1. [Gereksinim Analizi](Gereksinim-Analizi.md)
+2. [REST API Tasarımı (OpenAPI)](API-Tasarimi.md)
+3. [REST API Görev Dağılımı](Rest-API.md)
+4. [Web Front-End](WebFrontEnd.md)
+5. [Mobil Front-End](MobilFrontEnd.md)
+6. [Mobil Backend](MobilBackEnd.md)
+7. [Video Sunum](Sunum.md)
 
 ---
 
@@ -17,7 +75,7 @@ prototipi. Bir otobüs firmasının dijital bilet süreçlerini uçtan uca model
 └─────────────────────────┘        JSON               └───────────┬──────────────┘
         Mobil uyumlu                                               │
         (iOS / Android / Web)              ┌────────────┬──────────┼───────────┐
-                                           ▼            ▼          ▼           
+                                           ▼            ▼          ▼
                                   ┌──────────────┐ ┌─────────┐ ┌──────────────────┐
                                   │ MongoDB :27017│ │Redis    │ │ RabbitMQ :5672   │
                                   │ (kalıcı veri) │ │:6379    │ │ :15672 yönetim   │
@@ -99,20 +157,23 @@ npx expo start     # QR kod çıkar
 
 ## 🔌 REST API — 10 Uç Nokta
 
-| # | Metot | Yol | Açıklama |
-|---|---|---|---|
-| 1 | GET | `/api/sehirler` | Şehirleri listele |
-| 2 | GET | `/api/seferler` | Sefer ara/listele — **Redis cache** (HIT/MISS) |
-| 3 | POST | `/api/seferler` | Yeni sefer ekle (cache temizlenir) |
-| 4 | GET | `/api/seferler/{id}` | Sefer detayı + koltuk haritası |
-| 5 | POST | `/api/yolcular` | Yolcu kaydı oluştur |
-| 6 | GET | `/api/yolcular` | Yolcuları listele |
-| 7 | POST | `/api/biletler` | Bilet satın al — **RabbitMQ olayı yayınlar** |
-| 8 | GET | `/api/biletler` | Biletleri listele |
-| 9 | DELETE | `/api/biletler/{id}` | Bilet iptal et |
-| 10 | GET | `/api/istatistik` | Dashboard istatistikleri |
+| # | Gereksinim | Metot | Yol | Açıklama |
+|---|---|---|---|---|
+| 1 | Şehirleri Listeleme | GET | `/api/sehirler` | Şehirleri listele |
+| 2 | Sefer Arama | GET | `/api/seferler` | Sefer ara/listele — **Redis cache** (HIT/MISS) |
+| 3 | Sefer Ekleme | POST | `/api/seferler` | Yeni sefer ekle (cache temizlenir) |
+| 4 | Sefer Detayı Görüntüleme | GET | `/api/seferler/{sefer_id}` | Sefer detayı + koltuk haritası |
+| 5 | Yolcu Kaydetme | POST | `/api/yolcular` | Yolcu kaydı oluştur |
+| 6 | Yolcuları Listeleme | GET | `/api/yolcular` | Yolcuları listele |
+| 7 | Bilet Satın Alma | POST | `/api/biletler` | Bilet satın al — **RabbitMQ olayı yayınlar** |
+| 8 | Biletleri Listeleme | GET | `/api/biletler` | Biletleri listele |
+| 9 | Bilet İptal Etme | DELETE | `/api/biletler/{bilet_id}` | Bilet iptal et |
+| 10 | İstatistikleri Görüntüleme | GET | `/api/istatistik` | Dashboard istatistikleri |
 
 Ek: `GET /health` (Mongo/Redis/RabbitMQ durumu), `GET /` (özet).
+
+> **Not:** Bu API kimlik doğrulama (JWT/Bearer) **kullanmaz** — prototip kapsamında
+> tüm uç noktalar herkese açıktır.
 
 ---
 
@@ -158,10 +219,16 @@ cd jenkins && docker compose -f docker-compose.jenkins.yml up -d --build
 ## 📂 Proje Yapısı
 
 ```
-obiletproject/
+biletal/
+├── Readme.md                   # bu dosya (proje ana sayfası)
+├── Gereksinim-Analizi.md       # gereksinim listesi + dağılım
+├── API-Tasarimi.md             # OpenAPI 3.0 tasarımı
+├── biletal-api.yaml            # OpenAPI spesifikasyonu (makinece okunur)
+├── Rest-API.md / WebFrontEnd.md / MobilFrontEnd.md / MobilBackEnd.md / Sunum.md
+├── Betül-Erkoç/                # ekip üyesi görev dosyaları
 ├── docker-compose.yml          # tüm servisler (mongo/redis/rabbitmq/backend/worker/frontend)
 ├── Jenkinsfile                 # CI/CD pipeline
-├── backend/                    # FastAPI (app/main.py, app/routers/, app/cache.py, app/mq.py, app/database.py)
+├── backend/                    # FastAPI (app/main.py, app/routers/, app/cache.py, app/mq.py)
 ├── worker/                     # RabbitMQ tüketici (bildirim worker'ı)
 ├── frontend/                   # React Native / Expo (App.tsx, src/screens/...)
 ├── jenkins/                    # Docker erişimli özel Jenkins (Dockerfile, casc.yaml, SETUP.md)
@@ -169,4 +236,8 @@ obiletproject/
 └── docs/DEMO.md                # video çekim senaryosu (gereksinim → kanıt)
 ```
 
-Detaylı video çekim rehberi: **[docs/DEMO.md](docs/DEMO.md)**
+> **Teknik not:** Docker proje ad alanı (container ön eki) `obilet-` olarak
+> bırakılmıştır; bu yalnızca dahili servis adlandırmasıdır ve uygulamanın adı
+> **Biletal**'dir.
+
+Detaylı video çekim rehberi: **[docs/DEMO.md](docs/DEMO.md)** ve **[Sunum.md](Sunum.md)**

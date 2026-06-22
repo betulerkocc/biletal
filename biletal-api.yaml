@@ -1,0 +1,474 @@
+openapi: 3.1.0
+info:
+  title: Biletal — Otobüs Bileti Otomasyon API
+  description: '
+
+    **Biletal** — Obilet tarzı, mikroservis tabanlı otobüs bileti otomasyon sistemi.
+
+
+    * 🗄️ **MongoDB** — kalıcı veri (şehir, sefer, yolcu, bilet, bildirim)
+
+    * ⚡ **Redis** — sefer arama sonuçlarının cache''lenmesi (`/api/seferler`)
+
+    * 🐇 **RabbitMQ** — bilet alımında async bildirim olayı (`/api/biletler`)
+
+    * 🐳 **Docker Compose** + **Jenkins CI/CD**
+
+
+    Toplam **10 REST uç noktası** aşağıda gruplanmıştır.
+
+    '
+  version: 1.0.0
+  contact:
+    name: Biletal — Betül Erkoç
+    url: https://github.com/betulerkocc/biletal
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+paths:
+  /api/sehirler:
+    get:
+      tags:
+      - Şehirler (Cities)
+      summary: '[1] Tüm şehirleri listele'
+      description: Kalkış/varış seçimi için şehir listesini döner.
+      operationId: list_sehirler_api_sehirler_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/seferler:
+    get:
+      tags:
+      - Seferler (Trips)
+      summary: '[2] Sefer ara/listele — REDIS CACHE''li'
+      description: 'Seferleri arar. İlk istek MongoDB''den (MISS), tekrarlar Redis''ten (HIT).
+
+
+        Yanıttaki `cache` ve `sure_ms` alanları ile `X-Cache` başlığı, Redis''in
+
+        devrede olduğunu net şekilde gösterir.'
+      operationId: list_seferler_api_seferler_get
+      parameters:
+      - name: kalkis
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Kalkis
+      - name: varis
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Varis
+      - name: tarih
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tarih
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Seferler (Trips)
+      summary: '[3] Yeni sefer ekle (cache temizlenir)'
+      operationId: create_sefer_api_seferler_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeferCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/seferler/{sefer_id}:
+    get:
+      tags:
+      - Seferler (Trips)
+      summary: '[4] Sefer detayı + koltuk haritası'
+      operationId: get_sefer_api_seferler__sefer_id__get
+      parameters:
+      - name: sefer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sefer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/yolcular:
+    get:
+      tags:
+      - Yolcular (Passengers)
+      summary: '[6] Yolcuları listele'
+      operationId: list_yolcular_api_yolcular_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+      - Yolcular (Passengers)
+      summary: '[5] Yolcu kaydı oluştur'
+      operationId: create_yolcu_api_yolcular_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/YolcuCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/biletler:
+    post:
+      tags:
+      - Biletler (Tickets)
+      summary: '[7] Bilet satın al — RABBITMQ olayı yayınlar'
+      description: 'Bilet satışı yapar, koltuğu doldurur, cache''i temizler ve RabbitMQ
+
+        kuyruğuna bir olay yayınlar. Olayı ''worker'' servisi tüketip yolcuya
+
+        bildirim (SMS/E-posta simülasyonu) gönderir.'
+      operationId: book_ticket_api_biletler_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BiletCreate'
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Biletler (Tickets)
+      summary: '[8] Biletleri listele'
+      operationId: list_biletler_api_biletler_get
+      parameters:
+      - name: yolcu_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Yolcu Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/biletler/{bilet_id}:
+    delete:
+      tags:
+      - Biletler (Tickets)
+      summary: '[9] Bilet iptal et (koltuk boşalır)'
+      operationId: cancel_ticket_api_biletler__bilet_id__delete
+      parameters:
+      - name: bilet_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Bilet Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/istatistik:
+    get:
+      tags:
+      - İstatistik (Dashboard)
+      summary: '[10] Dashboard istatistikleri'
+      description: 'Genel sistem özetini döner. `gonderilen_bildirim` alanı, RabbitMQ
+
+        worker''ının ürettiği bildirim sayısıdır — yani kuyruğun çalıştığının
+
+        uygulama içinden de görülebilir kanıtıdır.'
+      operationId: istatistik_api_istatistik_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /:
+    get:
+      tags:
+      - Sistem
+      summary: Kök / sağlık özeti
+      operationId: root__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /health:
+    get:
+      tags:
+      - Sistem
+      summary: Servis sağlık kontrolü (Mongo/Redis/RabbitMQ)
+      description: CI/CD pipeline'ının 'Health Check' adımı bu uç noktayı çağırır.
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    BiletCreate:
+      properties:
+        sefer_id:
+          type: string
+          title: Sefer Id
+          description: Satın alınacak seferin ID'si
+        koltuk_no:
+          type: integer
+          maximum: 60.0
+          minimum: 1.0
+          title: Koltuk No
+          description: Seçilen koltuk numarası
+        yolcu_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Yolcu Id
+          description: Kayıtlı yolcu ID'si (opsiyonel)
+        ad:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ad
+          description: Yolcu adı (yolcu_id yoksa)
+        soyad:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Soyad
+          description: Yolcu soyadı (yolcu_id yoksa)
+      type: object
+      required:
+      - sefer_id
+      - koltuk_no
+      title: BiletCreate
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SeferCreate:
+      properties:
+        kalkis:
+          type: string
+          title: Kalkis
+          description: Kalkış şehri
+          examples:
+          - İstanbul
+        varis:
+          type: string
+          title: Varis
+          description: Varış şehri
+          examples:
+          - Ankara
+        tarih:
+          type: string
+          title: Tarih
+          description: Sefer tarihi (YYYY-AA-GG)
+          examples:
+          - '2026-06-25'
+        saat:
+          type: string
+          title: Saat
+          description: Kalkış saati
+          examples:
+          - 09:00
+        firma:
+          type: string
+          title: Firma
+          description: Otobüs firması
+          default: Biletal Turizm
+        otobus_tipi:
+          type: string
+          title: Otobus Tipi
+          description: Koltuk düzeni
+          default: 2+1
+        fiyat:
+          type: number
+          title: Fiyat
+          description: Bilet fiyatı (TL)
+          examples:
+          - 450.0
+        toplam_koltuk:
+          type: integer
+          maximum: 60.0
+          minimum: 10.0
+          title: Toplam Koltuk
+          description: Toplam koltuk sayısı
+          default: 40
+        sure:
+          type: string
+          title: Sure
+          description: Tahmini yolculuk süresi
+          default: 5s 30dk
+      type: object
+      required:
+      - kalkis
+      - varis
+      - tarih
+      - saat
+      - fiyat
+      title: SeferCreate
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    YolcuCreate:
+      properties:
+        ad:
+          type: string
+          title: Ad
+          examples:
+          - Ahmet
+        soyad:
+          type: string
+          title: Soyad
+          examples:
+          - Yılmaz
+        tc:
+          type: string
+          maxLength: 11
+          minLength: 11
+          title: Tc
+          description: TC Kimlik No (11 hane)
+          examples:
+          - '12345678901'
+        telefon:
+          type: string
+          title: Telefon
+          examples:
+          - '05551112233'
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          default: ''
+          examples:
+          - ahmet@example.com
+        cinsiyet:
+          type: string
+          title: Cinsiyet
+          default: Belirtilmedi
+          examples:
+          - Erkek
+          - Kadın
+      type: object
+      required:
+      - ad
+      - soyad
+      - tc
+      - telefon
+      title: YolcuCreate
+servers:
+- url: http://localhost:8000
+  description: Yerel geliştirme sunucusu (Docker Compose)
