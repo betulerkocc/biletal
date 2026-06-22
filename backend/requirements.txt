@@ -1,0 +1,11 @@
+# ── Obilet Backend (FastAPI) bağımlılıkları ──
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+motor==3.6.0                # Async MongoDB sürücüsü
+redis==5.2.1               # Redis (cache) async istemci
+aio-pika==9.5.4            # RabbitMQ async istemci
+pydantic==2.10.4
+pydantic-settings==2.7.1
+httpx==0.28.1             # testler için
+pytest==8.3.4
+pytest-asyncio==0.25.0

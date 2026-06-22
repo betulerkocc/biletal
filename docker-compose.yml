@@ -1,0 +1,106 @@
+# ============================================================================
+#  Obilet — Otobüs Bileti Otomasyon Sistemi · Mikroservis Orkestrasyonu
+#  Tek komut:  docker compose up -d --build
+# ============================================================================
+name: obilet                       # sabit proje adı (manuel + Jenkins tutarlı)
+
+services:
+
+  # ── Veritabanı (NoSQL) ────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: obilet-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db          # Kalıcı veri (Docker Volume)
+    ports:
+      - "27017:27017"
+    networks: [obilet-net]
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ── Cache (Redis) ─────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: obilet-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks: [obilet-net]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Mesaj Kuyruğu (RabbitMQ) ──────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: obilet-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"     # AMQP protokolü
+      - "15672:15672"   # Yönetim arayüzü (http://localhost:15672  guest/guest)
+    networks: [obilet-net]
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  # ── Backend (FastAPI) ─────────────────────────────────────────────────
+  backend:
+    build: ./backend
+    container_name: obilet-backend
+    restart: unless-stopped
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      MONGO_DB: obilet
+      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      TICKET_QUEUE: ticket_events
+    ports:
+      - "8000:8000"     # http://localhost:8000/docs (Swagger)
+    depends_on:
+      mongo:    { condition: service_healthy }
+      redis:    { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+    networks: [obilet-net]
+
+  # ── Worker (RabbitMQ tüketici / bildirim) ─────────────────────────────
+  worker:
+    build: ./worker
+    container_name: obilet-worker
+    restart: unless-stopped
+    environment:
+      MONGO_URL: mongodb://mongo:27017
+      MONGO_DB: obilet
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      TICKET_QUEUE: ticket_events
+    depends_on:
+      mongo:    { condition: service_healthy }
+      rabbitmq: { condition: service_healthy }
+    networks: [obilet-net]
+
+  # ── Frontend (Expo Web — mobil uyumlu) ────────────────────────────────
+  #  Ödev gereği network_mode: "host" kullanılır (dış dünyaya yayın).
+  #  Statik web export'u 8082 portunda sunulur (8081 başka projede dolu).
+  frontend:
+    build: ./frontend
+    container_name: obilet-frontend
+    restart: unless-stopped
+    network_mode: "host"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:                      # Kalıcı MongoDB verisi
+
+networks:
+  obilet-net:
+    driver: bridge

@@ -1,0 +1,24 @@
+# ── Obilet için özel Jenkins (Docker erişimli) ──
+# Çalıştır:  cd jenkins && docker compose -f docker-compose.jenkins.yml up -d --build
+# Arayüz:    http://localhost:8091   (admin / admin)
+# 'obilet-ci' job'u otomatik hazır gelir → "Build Now" ile pipeline çalışır.
+name: obilet-jenkins
+
+services:
+  jenkins:
+    build: .
+    container_name: obilet-jenkins
+    user: root                       # docker.sock erişimi için
+    restart: unless-stopped
+    ports:
+      - "8091:8080"                  # Jenkins arayüzü (8090 başka projede dolu)
+      - "50001:50000"
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false -Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock   # host Docker daemon
+      - ..:/project:ro                              # proje deposu (git checkout kaynağı)
+
+volumes:
+  jenkins_home:

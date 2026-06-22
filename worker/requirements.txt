@@ -1,0 +1,3 @@
+# ── Bildirim Worker (RabbitMQ tüketici) bağımlılıkları ──
+aio-pika==9.5.4
+motor==3.6.0

@@ -1,0 +1,36 @@
+# Jenkins Configuration as Code (JCasC)
+# Kurulum sihirbazı olmadan: admin kullanıcı + 'obilet-ci' pipeline job'u hazır gelir.
+jenkins:
+  systemMessage: "Obilet — Otobüs Bileti Otomasyon Sistemi · CI/CD"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: admin
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: true
+
+unclassified:
+  location:
+    url: "http://localhost:8091/"
+
+jobs:
+  - script: >
+      pipelineJob('obilet-ci') {
+        description('Obilet Mikroservis CI/CD — Checkout -> Build&Deploy (Docker) -> Health Check -> Smoke Test')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url('/project') }
+                branch('*/master')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(false)
+          }
+        }
+      }
