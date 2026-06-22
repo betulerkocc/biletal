@@ -29,7 +29,7 @@ jobs:
             scm {
               git {
                 remote { url('/project') }
-                branch('*/master')
+                branch('*/main')
               }
             }
             scriptPath('Jenkinsfile')
