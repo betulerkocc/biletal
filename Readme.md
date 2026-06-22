@@ -31,7 +31,7 @@
 
 ## Proje Linkleri
 
-> Proje **yerel Docker ortamında** çalışır (derste yerel çalıştırma yeterlidir).
+> Proje **yerel Docker ortamında** çalışır.
 
 - **REST API Adresi (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
 - **Web Frontend Adresi:** [http://localhost:8082](http://localhost:8082)
