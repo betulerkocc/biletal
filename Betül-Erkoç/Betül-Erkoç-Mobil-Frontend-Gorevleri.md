@@ -1,5 +1,5 @@
 # Betül Erkoç'un Mobil Frontend Görevleri
-**Mobile Front-end Demo Videosu:** [Link buraya eklenecek](https://example.com)
+**Mobile Front-end Demo Videosu:** [Gereksinim Demoları (Sunum) Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
 
 > Mobil uygulama React Native / Expo ile geliştirilmiştir.
 > Çalıştırma: `cd frontend && npx expo start` (Android `a`, iOS `i`, Web `w`, cihaz: Expo Go).

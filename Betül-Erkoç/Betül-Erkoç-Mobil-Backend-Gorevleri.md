@@ -1,5 +1,5 @@
 # Betül Erkoç'un Mobil Backend Görevleri
-**Mobil Front-end ile Back-end Bağlanmış Test Videosu:** [Link buraya eklenecek](https://example.com)
+**Mobil Front-end ile Back-end Bağlanmış Test Videosu:** [Gereksinim Demoları (Sunum) Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
 
 > Tüm API çağrıları tek merkezi istemci `frontend/src/api.ts` üzerinden yapılır.
 > Base URL platforma göre otomatik seçilir (Android `10.0.2.2:8000`, diğer `localhost:8000`)

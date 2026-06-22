@@ -41,6 +41,17 @@
 
 ---
 
+## 🎥 Demo Videoları
+
+| # | Video | Link |
+|---|---|---|
+| 1 | Gereksinim Demoları (Sunum) | https://www.youtube.com/watch?v=ukluw-g09GM |
+| 2 | Docker + CI/CD (Jenkins) | https://www.youtube.com/watch?v=dsuVGZ_zYMA |
+| 3 | Redis (Cache) | https://youtu.be/0LHmNNseJIw |
+| 4 | RabbitMQ (Mesaj Kuyruğu) | https://youtu.be/FoGuQu9lISI |
+
+---
+
 ## Proje Ekibi
 
 **Grup Adı:** Biletal

@@ -9,7 +9,7 @@
 
 ## CI-CD ve Docker Kanıt Videosu
 
-> **Video Linki:** [CI-CD ve Docker videosu linki buraya eklenecek](https://example.com)
+> **Video Linki:** [Docker + CI/CD (Jenkins) Kanıt Videosu](https://www.youtube.com/watch?v=dsuVGZ_zYMA)
 
 **Gösterilecekler:**
 - `docker compose ps` → 6 servis (mongo, redis, rabbitmq, backend, worker, frontend)
@@ -20,7 +20,7 @@
 
 ## RabbitMQ/Kafka Kanıt Videosu
 
-> **Video Linki:** [RabbitMQ videosu linki buraya eklenecek](https://example.com)
+> **Video Linki:** [RabbitMQ Kanıt Videosu](https://youtu.be/FoGuQu9lISI)
 
 **Gösterilecekler:** RabbitMQ'yu **üç gereksinim** kullanır → Yolcu Kaydetme (hoş geldin),
 Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
@@ -31,7 +31,7 @@ Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
 
 ## Redis/Memcached Kanıt Videosu
 
-> **Video Linki:** [Redis videosu linki buraya eklenecek](https://example.com)
+> **Video Linki:** [Redis Kanıt Videosu](https://youtu.be/0LHmNNseJIw)
 
 **Gösterilecekler:**
 - Sefer Ara'da arama yap → **`🗄️ MongoDB → MISS · süre: ~5 ms`**
@@ -45,7 +45,7 @@ Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
 
 ## Sunum Videosu (Cep Telefonunda Gösterilmeli, Tüm ekip bir arada)
 
-> **Video Linki:** [Sunum videosu linki buraya eklenecek](https://example.com)
+> **Video Linki:** [Sunum — Gereksinim Demoları Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
 
 ---
 

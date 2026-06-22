@@ -1,6 +1,6 @@
 # Betül Erkoç'un REST API Metotları
 
-**API Test Videosu:** [Link buraya eklenecek](https://example.com)
+**API Test Videosu:** [Gereksinim Demoları (Sunum) Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
 
 > Tüm uç noktalar Swagger üzerinden test edilebilir: http://localhost:8000/docs
 > Kimlik doğrulama (JWT/Bearer) gerekmez.

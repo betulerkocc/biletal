@@ -1,5 +1,5 @@
 # Betül Erkoç'un Web Frontend Görevleri
-**Front-end Test Videosu:** [Link buraya eklenecek](https://example.com)
+**Front-end Test Videosu:** [Gereksinim Demoları (Sunum) Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
 
 > Web arayüzü, React Native / Expo uygulamasının `react-native-web` ile alınmış
 > statik web export'udur. Adres: http://localhost:8082
