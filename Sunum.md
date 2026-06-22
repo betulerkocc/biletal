@@ -46,6 +46,8 @@ Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
 ## Sunum Videosu (Cep Telefonunda Gösterilmeli, Tüm ekip bir arada)
 
 > **Video Linki:** [Sunum — Gereksinim Demoları Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
+>
+> **Telefonda Gösterim Videosu:** [Mobil Uygulama — Telefon Gösterimi](https://youtube.com/shorts/mSNfchiUl70)
 
 ---
 
