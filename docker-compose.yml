@@ -1,5 +1,5 @@
 # ============================================================================
-#  Obilet — Otobüs Bileti Otomasyon Sistemi · Mikroservis Orkestrasyonu
+#  Biletal — Otobüs Bileti Otomasyon Sistemi · Mikroservis Orkestrasyonu
 #  Tek komut:  docker compose up -d --build
 # ============================================================================
 name: obilet                       # sabit proje adı (manuel + Jenkins tutarlı)

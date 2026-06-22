@@ -9,7 +9,7 @@ class SeferCreate(BaseModel):
     varis: str = Field(..., examples=["Ankara"], description="Varış şehri")
     tarih: str = Field(..., examples=["2026-06-25"], description="Sefer tarihi (YYYY-AA-GG)")
     saat: str = Field(..., examples=["09:00"], description="Kalkış saati")
-    firma: str = Field("Obilet Turizm", description="Otobüs firması")
+    firma: str = Field("Biletal Turizm", description="Otobüs firması")
     otobus_tipi: str = Field("2+1", description="Koltuk düzeni")
     fiyat: float = Field(..., examples=[450.0], description="Bilet fiyatı (TL)")
     toplam_koltuk: int = Field(40, ge=10, le=60, description="Toplam koltuk sayısı")

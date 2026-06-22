@@ -1,4 +1,4 @@
-# ── Obilet için özel Jenkins (Docker erişimli) ──
+# ── Biletal için özel Jenkins (Docker erişimli) ──
 # Çalıştır:  cd jenkins && docker compose -f docker-compose.jenkins.yml up -d --build
 # Arayüz:    http://localhost:8091   (admin / admin)
 # 'obilet-ci' job'u otomatik hazır gelir → "Build Now" ile pipeline çalışır.

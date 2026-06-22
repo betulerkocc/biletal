@@ -12,11 +12,11 @@ SEHIRLER = [
 
 # (kalkis, varis, saat, fiyat, sure, firma, otobus_tipi)
 ROTALAR = [
-    {"kalkis": "İstanbul", "varis": "Ankara",   "saat": "08:00", "fiyat": 450.0, "sure": "5s 30dk", "firma": "Obilet Turizm", "otobus_tipi": "2+1", "toplam_koltuk": 40},
+    {"kalkis": "İstanbul", "varis": "Ankara",   "saat": "08:00", "fiyat": 450.0, "sure": "5s 30dk", "firma": "Biletal Turizm", "otobus_tipi": "2+1", "toplam_koltuk": 40},
     {"kalkis": "İstanbul", "varis": "Ankara",   "saat": "14:30", "fiyat": 420.0, "sure": "5s 45dk", "firma": "Metro Turizm",  "otobus_tipi": "2+1", "toplam_koltuk": 40},
     {"kalkis": "İstanbul", "varis": "İzmir",    "saat": "09:15", "fiyat": 520.0, "sure": "6s 15dk", "firma": "Pamukkale",     "otobus_tipi": "2+1", "toplam_koltuk": 40},
     {"kalkis": "Ankara",   "varis": "İstanbul", "saat": "10:00", "fiyat": 440.0, "sure": "5s 30dk", "firma": "Kamil Koç",     "otobus_tipi": "2+2", "toplam_koltuk": 46},
-    {"kalkis": "Ankara",   "varis": "İzmir",    "saat": "07:30", "fiyat": 480.0, "sure": "7s 00dk", "firma": "Obilet Turizm", "otobus_tipi": "2+1", "toplam_koltuk": 40},
+    {"kalkis": "Ankara",   "varis": "İzmir",    "saat": "07:30", "fiyat": 480.0, "sure": "7s 00dk", "firma": "Biletal Turizm", "otobus_tipi": "2+1", "toplam_koltuk": 40},
     {"kalkis": "İzmir",    "varis": "Antalya",  "saat": "11:45", "fiyat": 380.0, "sure": "6s 30dk", "firma": "Nilüfer",       "otobus_tipi": "2+1", "toplam_koltuk": 38},
     {"kalkis": "Bursa",    "varis": "Ankara",   "saat": "13:00", "fiyat": 350.0, "sure": "4s 45dk", "firma": "Metro Turizm",  "otobus_tipi": "2+2", "toplam_koltuk": 46},
     {"kalkis": "Antalya",  "varis": "İstanbul", "saat": "20:30", "fiyat": 600.0, "sure": "11s 00dk","firma": "Kamil Koç",     "otobus_tipi": "2+1", "toplam_koltuk": 40},

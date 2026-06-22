@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    app_name: str = "Obilet — Otobüs Bileti Otomasyon API"
+    app_name: str = "Biletal — Otobüs Bileti Otomasyon API"
     app_version: str = "1.0.0"
 
     # MongoDB

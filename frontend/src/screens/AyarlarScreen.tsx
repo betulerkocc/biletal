@@ -87,7 +87,7 @@ export function AyarlarScreen() {
         </Text>
       </Card>
 
-      <Text style={styles.footer}>Obilet · Otobüs Bileti Otomasyon Sistemi · Mikroservis Mimarisi</Text>
+      <Text style={styles.footer}>Biletal · Otobüs Bileti Otomasyon Sistemi · Mikroservis Mimarisi</Text>
     </ScrollView>
   );
 }

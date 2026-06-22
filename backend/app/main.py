@@ -1,4 +1,4 @@
-"""Obilet — Otobüs Bileti Otomasyon Sistemi · FastAPI Backend.
+"""Biletal — Otobüs Bileti Otomasyon Sistemi · FastAPI Backend.
 
 Mikroservis mimarisi:
   Frontend (React Native/Expo)  ->  Backend (FastAPI)  ->  MongoDB
@@ -19,7 +19,7 @@ from .routers import biletler, istatistik, seferler, sehirler, yolcular
 from .seed import seed_data
 
 DESCRIPTION = """
-**Obilet** tarzı, mikroservis tabanlı otobüs bileti otomasyon sistemi.
+**Biletal** — Obilet tarzı, mikroservis tabanlı otobüs bileti otomasyon sistemi.
 
 * 🗄️ **MongoDB** — kalıcı veri (şehir, sefer, yolcu, bilet, bildirim)
 * ⚡ **Redis** — sefer arama sonuçlarının cache'lenmesi (`/api/seferler`)

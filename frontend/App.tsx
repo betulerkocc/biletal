@@ -1,5 +1,5 @@
 // ============================================================================
-//  Obilet — Otobüs Bileti Otomasyon Sistemi · Mobil Arayüz (React Native/Expo)
+//  Biletal — Otobüs Bileti Otomasyon Sistemi · Mobil Arayüz (React Native/Expo)
 //  Mobil uyumlu; web simülasyon modu (expo start --web) ile tarayıcıda çalışır.
 // ============================================================================
 import { StatusBar } from 'expo-status-bar';
@@ -43,7 +43,7 @@ export default function App() {
   if (!ready) {
     return (
       <SafeAreaView style={styles.loading}>
-        <Text style={{ fontSize: 18 }}>🚌 Obilet yükleniyor...</Text>
+        <Text style={{ fontSize: 18 }}>🚌 Biletal yükleniyor...</Text>
       </SafeAreaView>
     );
   }
@@ -53,7 +53,7 @@ export default function App() {
       <StatusBar style="light" />
       {/* Üst başlık */}
       <View style={styles.header}>
-        <Text style={styles.logo}>🚌 Obilet</Text>
+        <Text style={styles.logo}>🚌 Biletal</Text>
         <Text style={styles.subtitle}>Otobüs Bileti Otomasyon Sistemi</Text>
       </View>
 

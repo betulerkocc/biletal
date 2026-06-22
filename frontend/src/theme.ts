@@ -1,4 +1,4 @@
-// Obilet tema renkleri ve ortak stil sabitleri
+// Biletal tema renkleri ve ortak stil sabitleri
 export const colors = {
   primary: '#E11D2A',
   primaryDark: '#B3121C',

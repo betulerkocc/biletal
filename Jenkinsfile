@@ -1,5 +1,5 @@
 // ============================================================================
-//  Obilet — CI/CD Pipeline (Declarative)
+//  Biletal — CI/CD Pipeline (Declarative)
 //  Aşamalar: Checkout → Build & Deploy (Docker) → Health Check → Smoke Test
 //  Tetikleyici: GitHub webhook ("GitHub hook trigger for GITScm polling")
 // ============================================================================
