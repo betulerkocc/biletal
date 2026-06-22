@@ -22,11 +22,11 @@ tamamı Betül Erkoç'a** aittir.
 | 2 | GET | `/api/seferler` | Sefer ara/listele | ⚡ Redis cache |
 | 3 | POST | `/api/seferler` | Yeni sefer ekle | cache temizleme |
 | 4 | GET | `/api/seferler/{sefer_id}` | Sefer detayı + koltuk haritası | — |
-| 5 | POST | `/api/yolcular` | Yolcu kaydı oluştur | — |
+| 5 | POST | `/api/yolcular` | Yolcu kaydı oluştur | 🐇 RabbitMQ olayı (hoş geldin) |
 | 6 | GET | `/api/yolcular` | Yolcuları listele | — |
-| 7 | POST | `/api/biletler` | Bilet satın al | 🐇 RabbitMQ olayı |
+| 7 | POST | `/api/biletler` | Bilet satın al | 🐇 RabbitMQ olayı (satın alma) |
 | 8 | GET | `/api/biletler` | Biletleri listele | — |
-| 9 | DELETE | `/api/biletler/{bilet_id}` | Bilet iptal et | — |
+| 9 | DELETE | `/api/biletler/{bilet_id}` | Bilet iptal et | 🐇 RabbitMQ olayı (iptal) |
 | 10 | GET | `/api/istatistik` | Dashboard istatistikleri | — |
 
 ---
@@ -59,4 +59,4 @@ tamamı Betül Erkoç'a** aittir.
 ### 5. Performans ve Mesajlaşma
 - `GET /api/seferler` sonuçları Redis'te önbelleğe alınır (`X-Cache: HIT/MISS`).
 - Veri değiştiren işlemler (sefer ekleme, bilet alma/iptal) ilgili cache'i temizler.
-- `POST /api/biletler` bir bildirim olayını RabbitMQ kuyruğuna yayınlar.
+- Üç uç nokta RabbitMQ kuyruğuna bildirim olayı yayınlar: `POST /api/yolcular` (hoş geldin), `POST /api/biletler` (satın alma), `DELETE /api/biletler/{id}` (iptal).

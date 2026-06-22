@@ -22,11 +22,11 @@
 
 > **Video Linki:** [RabbitMQ videosu linki buraya eklenecek](https://example.com)
 
-**Gösterilecekler:**
-- İki terminal: birinde `docker compose logs -f worker`
-- Tarayıcıda http://localhost:15672 (guest/guest) → Queues → `ticket_events`
-- Uygulamadan **bir bilet al** (Sefer Ara → Bilet Al → koltuk seç → Satın Al)
-- Worker terminalinde akış: `📥 olay alındı → 📧 E-posta → 📱 SMS → ✅ kaydedildi`
+**Gösterilecekler:** RabbitMQ'yu **üç gereksinim** kullanır → Yolcu Kaydetme (hoş geldin),
+Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
+- İki terminal: birinde `docker compose logs -f worker`, RabbitMQ UI: http://localhost:15672 (guest/guest) → Queues → `ticket_events`
+- **Kuyruk birikme tekniği (önerilir):** `docker compose stop worker` → uygulamadan **yolcu kaydet + bilet al + bilet iptal et** → RabbitMQ UI'da **mesajlar bekler (Ready=3)** → `docker compose start worker` → worker üç olayı da işler.
+- Worker terminalinde üç farklı akış: `📥 YENİ YOLCU KAYDI → ✅`, `📥 BİLET ALMA → ✅`, `📥 BİLET İPTAL → ✅`
 - Biletlerim'de bilete **"🐇 Bildirim gönderildi"** rozetinin gelmesi
 
 ## Redis/Memcached Kanıt Videosu

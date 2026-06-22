@@ -138,6 +138,9 @@ paths:
     post:
       tags: [Yolcular]
       summary: "[5] Yolcu kaydı oluştur"
+      description: |
+        Yeni yolcu kaydeder ve `ticket_events` kuyruğuna "hoş geldin" (yolcu_kaydi)
+        olayını yayınlar; worker bildirim gönderir.
       operationId: createYolcu
       requestBody:
         required: true
@@ -200,6 +203,9 @@ paths:
     delete:
       tags: [Biletler]
       summary: "[9] Bilet iptal et (koltuk boşalır)"
+      description: |
+        Bileti iptal eder, koltuğu boşaltır ve `ticket_events` kuyruğuna "iptal"
+        (bilet_iptal) olayını yayınlar; worker iptal/iade bildirimi gönderir.
       operationId: cancelTicket
       parameters:
         - { name: bilet_id, in: path, required: true, schema: { type: string } }
@@ -214,6 +220,7 @@ paths:
                   mesaj: { type: string, example: "Bilet iptal edildi" }
                   pnr: { type: string, example: "3P1L8V" }
                   iade_tutari: { type: number, example: 450.0 }
+                  rabbitmq_published: { type: boolean, example: true }
         '404': { $ref: '#/components/responses/NotFound' }
         '409': { description: Bilet zaten iptal edilmiş }
 

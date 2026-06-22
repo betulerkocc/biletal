@@ -44,14 +44,14 @@
 - **Response:** `200 OK` — sefer detayı + `dolu_koltuklar` / `bos_koltuk` (koltuk haritası)
 - **Hata:** `404 Not Found` — "Sefer bulunamadı"
 
-## 5. Yolcu Kaydetme
+## 5. Yolcu Kaydetme (RabbitMQ — hoş geldin bildirimi)
 - **Endpoint:** `POST /api/yolcular`
 - **Request Body:**
   ```json
   { "ad": "Ahmet", "soyad": "Yılmaz", "tc": "12345678901",
     "telefon": "05551112233", "email": "ahmet@example.com", "cinsiyet": "Erkek" }
   ```
-- **Response:** `201 Created` — oluşturulan yolcu döner.
+- **Response:** `201 Created` — oluşturulan yolcu + `"rabbitmq_published": true` döner. Worker yolcuya "hoş geldin" bildirimi gönderir.
 - **Hata:** `409 Conflict` — "Bu TC ile kayıtlı yolcu var"
 
 ## 6. Yolcuları Listeleme
@@ -88,14 +88,14 @@
   ```
   > `bildirim_gonderildi`, RabbitMQ worker bildirimi işledikten sonra `true` görünür.
 
-## 9. Bilet İptal Etme
+## 9. Bilet İptal Etme (RabbitMQ — iptal bildirimi)
 - **Endpoint:** `DELETE /api/biletler/{bilet_id}`
 - **Path Parameters:** `bilet_id` (string, required)
 - **Response:** `200 OK`
   ```json
-  { "mesaj": "Bilet iptal edildi", "pnr": "3P1L8V", "iade_tutari": 450.0 }
+  { "mesaj": "Bilet iptal edildi", "pnr": "3P1L8V", "iade_tutari": 450.0, "rabbitmq_published": true }
   ```
-- **Hatalar:** `404` (bilet bulunamadı), `409` (zaten iptal edilmiş). İptalde koltuk yeniden boşalır.
+- **Hatalar:** `404` (bilet bulunamadı), `409` (zaten iptal edilmiş). İptalde koltuk yeniden boşalır; worker yolcuya "iptal ve iade" bildirimi gönderir.
 
 ## 10. İstatistikleri Görüntüleme
 - **Endpoint:** `GET /api/istatistik`

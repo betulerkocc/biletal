@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 
 from ..database import col
 from ..models import YolcuCreate
+from ..mq import publish_event
 from ..utils import now_iso, serialize
 
 router = APIRouter(prefix="/api/yolcular", tags=["Yolcular (Passengers)"])
@@ -17,7 +18,18 @@ async def create_yolcu(yolcu: YolcuCreate):
     doc["created_at"] = now_iso()
     res = await col("yolcular").insert_one(doc)
     created = await col("yolcular").find_one({"_id": res.inserted_id})
-    return serialize(created)
+
+    # RabbitMQ olayı yayınla (hoş geldin bildirimi)
+    published = await publish_event({
+        "tip": "yolcu_kaydi",
+        "id": str(res.inserted_id),
+        "yolcu_ad": f"{yolcu.ad} {yolcu.soyad}",
+        "yolcu_email": yolcu.email or "",
+        "yolcu_telefon": yolcu.telefon,
+    })
+    out = serialize(created)
+    out["rabbitmq_published"] = published
+    return out
 
 
 @router.get("", summary="[6] Yolcuları listele")

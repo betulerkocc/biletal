@@ -1,9 +1,12 @@
 """RabbitMQ (aio-pika) mesaj kuyruğu katmanı — PUBLISHER tarafı.
 
-Bilet satın alındığında ('POST /api/biletler') bir olay (event) bu kuyruğa
-yazılır. Ayrı bir 'worker' servisi bu olayı tüketir ve yolcuya bildirim
-(SMS/E-posta simülasyonu) gönderir. Böylece senkron olmayan (async)
-mikroservis haberleşmesi gösterilmiş olur.
+Üç iş olayında ('tip') bu kuyruğa olay (event) yazılır:
+  - bilet_alma   → POST   /api/biletler       (satın alma bildirimi)
+  - bilet_iptal  → DELETE /api/biletler/{id}   (iptal bildirimi)
+  - yolcu_kaydi  → POST   /api/yolcular        (hoş geldin bildirimi)
+Ayrı bir 'worker' servisi olayları tüketip yolcuya bildirim (SMS/E-posta
+simülasyonu) gönderir. Böylece senkron olmayan (async) mikroservis
+haberleşmesi gösterilmiş olur.
 """
 import asyncio
 import json
@@ -42,8 +45,12 @@ async def close() -> None:
         await mq.connection.close()
 
 
-async def publish_ticket_event(payload: dict) -> bool:
-    """Bilet olayını kuyruğa yayınlar. Bağlantı yoksa False döner."""
+async def publish_event(payload: dict) -> bool:
+    """Bir olayı (event) kuyruğa yayınlar. Bağlantı yoksa False döner.
+
+    payload['tip'] olay türünü belirtir: 'bilet_alma' | 'bilet_iptal' | 'yolcu_kaydi'.
+    Worker servisi bu türe göre farklı bildirim üretir.
+    """
     if not mq.channel:
         return False
     message = aio_pika.Message(
@@ -52,8 +59,13 @@ async def publish_ticket_event(payload: dict) -> bool:
         content_type="application/json",
     )
     await mq.channel.default_exchange.publish(message, routing_key=settings.ticket_queue)
-    print(f"📤 RabbitMQ olayı yayınlandı: PNR={payload.get('pnr')} koltuk={payload.get('koltuk_no')}")
+    print(f"📤 RabbitMQ olayı yayınlandı: tip={payload.get('tip')} | "
+          f"{payload.get('pnr') or payload.get('yolcu_ad')}")
     return True
+
+
+# Geriye dönük uyumluluk (eski ad)
+publish_ticket_event = publish_event
 
 
 async def is_connected() -> bool:

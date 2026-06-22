@@ -38,7 +38,7 @@ o sayfada ayrıntılı şekilde listelenmiştir.
 4. **Sefer Detayı Görüntüleme** — `GET /api/seferler/{sefer_id}` — (Betül Erkoç)
    Bir seferin ayrıntılarını ve koltuk haritasını (dolu/boş koltuklar) getirir.
 5. **Yolcu Kaydetme** — `POST /api/yolcular` — (Betül Erkoç)
-   Yeni bir yolcuyu kişisel bilgileriyle (ad, soyad, TC, telefon) kaydeder.
+   Yeni bir yolcuyu kişisel bilgileriyle (ad, soyad, TC, telefon) kaydeder; "hoş geldin" bildirim olayını **RabbitMQ** kuyruğuna yayınlar.
 6. **Yolcuları Listeleme** — `GET /api/yolcular` — (Betül Erkoç)
    Kayıtlı yolcuların listesini getirir.
 7. **Bilet Satın Alma** — `POST /api/biletler` — (Betül Erkoç)
@@ -46,7 +46,7 @@ o sayfada ayrıntılı şekilde listelenmiştir.
 8. **Biletleri Listeleme** — `GET /api/biletler` — (Betül Erkoç)
    Satın alınmış biletleri listeler.
 9. **Bilet İptal Etme** — `DELETE /api/biletler/{bilet_id}` — (Betül Erkoç)
-   Bir bileti iptal eder; koltuğu yeniden boşa çıkarır.
+   Bir bileti iptal eder; koltuğu yeniden boşa çıkarır; "iptal" bildirim olayını **RabbitMQ** kuyruğuna yayınlar.
 10. **İstatistikleri Görüntüleme** — `GET /api/istatistik` — (Betül Erkoç)
     Toplam sefer/yolcu/bilet, gelir ve gönderilen bildirim sayısı gibi özet verileri getirir.
 

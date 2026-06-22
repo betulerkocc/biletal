@@ -6,7 +6,7 @@ from fastapi import APIRouter, HTTPException
 from ..cache import delete_pattern
 from ..database import col
 from ..models import BiletCreate
-from ..mq import publish_ticket_event
+from ..mq import publish_event
 from ..utils import gen_pnr, now_iso, oid, serialize
 
 router = APIRouter(prefix="/api/biletler", tags=["Biletler (Tickets)"])
@@ -70,9 +70,10 @@ async def book_ticket(req: BiletCreate):
     )
     await delete_pattern("seferler:*")
 
-    # RabbitMQ olayı yayınla
+    # RabbitMQ olayı yayınla (satın alma bildirimi)
     event = serialize({**bilet, "_id": res.inserted_id})
-    published = await publish_ticket_event(event)
+    event["tip"] = "bilet_alma"
+    published = await publish_event(event)
 
     out = serialize({**bilet, "_id": res.inserted_id})
     out["rabbitmq_published"] = published
@@ -102,4 +103,18 @@ async def cancel_ticket(bilet_id: str):
         {"_id": oid(bilet["sefer_id"])}, {"$pull": {"dolu_koltuklar": bilet["koltuk_no"]}}
     )
     await delete_pattern("seferler:*")
-    return {"mesaj": "Bilet iptal edildi", "pnr": bilet["pnr"], "iade_tutari": bilet["fiyat"]}
+
+    # RabbitMQ olayı yayınla (iptal bildirimi)
+    published = await publish_event({
+        "tip": "bilet_iptal",
+        "pnr": bilet["pnr"],
+        "yolcu_ad": bilet.get("yolcu_ad", "Yolcu"),
+        "kalkis": bilet.get("kalkis"),
+        "varis": bilet.get("varis"),
+        "koltuk_no": bilet.get("koltuk_no"),
+        "iade_tutari": bilet["fiyat"],
+        "yolcu_email": bilet.get("yolcu_email", ""),
+        "yolcu_telefon": bilet.get("yolcu_telefon", ""),
+    })
+    return {"mesaj": "Bilet iptal edildi", "pnr": bilet["pnr"],
+            "iade_tutari": bilet["fiyat"], "rabbitmq_published": published}

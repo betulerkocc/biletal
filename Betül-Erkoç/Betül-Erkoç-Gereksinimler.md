@@ -29,7 +29,9 @@
    - **API Metodu:** `POST /api/yolcular`
    - **Açıklama:** Yeni bir yolcuyu sisteme kaydeder. Ad, soyad, TC kimlik numarası,
      telefon, e-posta ve cinsiyet bilgileri alınır. Aynı TC numarasıyla daha önce
-     kayıt varsa sistem uyarı verir ve mükerrer kayda izin vermez.
+     kayıt varsa sistem uyarı verir ve mükerrer kayda izin vermez. Kayıt sonrası
+     yolcuya "hoş geldin" bildirimi bir mesaj kuyruğuna (RabbitMQ) bırakılır ve
+     arka plandaki worker servisi bunu işler.
 
 6. **Yolcuları Listeleme**
    - **API Metodu:** `GET /api/yolcular`
@@ -52,7 +54,9 @@
    - **API Metodu:** `DELETE /api/biletler/{bilet_id}`
    - **Açıklama:** Mevcut bir bileti iptal eder. Bilet "iptal" durumuna geçer ve
      o koltuk yeniden boşa çıkarılır; böylece koltuk başka bir yolcuya satılabilir.
-     Zaten iptal edilmiş bir bilet tekrar iptal edilemez.
+     Zaten iptal edilmiş bir bilet tekrar iptal edilemez. İptal sonrası yolcuya
+     "iptal ve iade" bildirimi bir mesaj kuyruğuna (RabbitMQ) bırakılır ve
+     arka plandaki worker servisi bunu işler.
 
 10. **İstatistikleri Görüntüleme**
     - **API Metodu:** `GET /api/istatistik`

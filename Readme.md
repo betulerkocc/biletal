@@ -163,11 +163,11 @@ npx expo start     # QR kod çıkar
 | 2 | Sefer Arama | GET | `/api/seferler` | Sefer ara/listele — **Redis cache** (HIT/MISS) |
 | 3 | Sefer Ekleme | POST | `/api/seferler` | Yeni sefer ekle (cache temizlenir) |
 | 4 | Sefer Detayı Görüntüleme | GET | `/api/seferler/{sefer_id}` | Sefer detayı + koltuk haritası |
-| 5 | Yolcu Kaydetme | POST | `/api/yolcular` | Yolcu kaydı oluştur |
+| 5 | Yolcu Kaydetme | POST | `/api/yolcular` | Yolcu kaydı oluştur — **RabbitMQ olayı (hoş geldin)** |
 | 6 | Yolcuları Listeleme | GET | `/api/yolcular` | Yolcuları listele |
 | 7 | Bilet Satın Alma | POST | `/api/biletler` | Bilet satın al — **RabbitMQ olayı yayınlar** |
 | 8 | Biletleri Listeleme | GET | `/api/biletler` | Biletleri listele |
-| 9 | Bilet İptal Etme | DELETE | `/api/biletler/{bilet_id}` | Bilet iptal et |
+| 9 | Bilet İptal Etme | DELETE | `/api/biletler/{bilet_id}` | Bilet iptal et — **RabbitMQ olayı (iptal)** |
 | 10 | İstatistikleri Görüntüleme | GET | `/api/istatistik` | Dashboard istatistikleri |
 
 Ek: `GET /health` (Mongo/Redis/RabbitMQ durumu), `GET /` (özet).
@@ -188,10 +188,17 @@ Uygulamada "Sefer Ara" ekranında HIT/MISS ve süre (ms) büyük puntoyla görü
 
 ## 🐇 RabbitMQ nasıl kullanılıyor?
 
-`POST /api/biletler` ile bilet alındığında backend, `ticket_events` kuyruğuna
-bir olay yayınlar. Ayrı çalışan **worker** servisi bu olayı tüketir ve yolcuya
-bildirim (SMS + E-posta simülasyonu) "gönderir", MongoDB'ye `bildirimler`
-kaydı yazar.
+**Üç farklı iş olayı** `ticket_events` kuyruğuna olay yayınlar:
+
+| Gereksinim | Uç nokta | Olay türü (`tip`) | Bildirim |
+|---|---|---|---|
+| Yolcu Kaydetme | `POST /api/yolcular` | `yolcu_kaydi` | "Hoş geldin" bildirimi |
+| Bilet Satın Alma | `POST /api/biletler` | `bilet_alma` | "Bilet onaylandı" bildirimi |
+| Bilet İptal Etme | `DELETE /api/biletler/{id}` | `bilet_iptal` | "İptal + iade" bildirimi |
+
+Ayrı çalışan **worker** servisi bu olayları tüketir, olay türüne göre yolcuya
+bildirim (SMS + E-posta simülasyonu) "gönderir" ve MongoDB'ye `bildirimler`
+kaydı yazar. `İstatistik`'teki `gönderilen_bildirim` sayısı tüm bu olayları kapsar.
 
 Canlı izlemek için:
 ```bash

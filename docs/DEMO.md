@@ -14,23 +14,30 @@ bash scripts/reset.sh             # demo verisini sıfırla (temiz seed)
 
 ## 🎥 VİDEO 1 — RabbitMQ (Mesaj Kuyruğu)
 
-**Söyle:** “Gereksinim: RabbitMQ ile asenkron mesaj kuyruğu. Bilet alındığında
-bildirim olayı kuyruğa yazılıyor, ayrı bir worker servisi tüketip yolcuya
-bildirim gönderiyor.”
+**Söyle:** “Gereksinim: RabbitMQ ile asenkron mesaj kuyruğu. **Üç iş olayı** kuyruğa
+yazılıyor — Yolcu Kaydetme (hoş geldin), Bilet Satın Alma (satın alma) ve Bilet
+İptal (iptal) — ayrı bir worker servisi tüketip yolcuya bildirim gönderiyor.”
 
-**Göster:**
-1. İki terminal aç. Birinde worker loglarını canlı izle:
+**Göster (kuyruk birikme tekniği — en net kanıt):**
+1. Worker loglarını izlemek için terminal aç ve önce **worker'ı durdur**:
    ```bash
-   docker compose logs -f worker
+   docker compose stop worker
    ```
-2. Tarayıcıda **http://localhost:15672** (guest/guest) → *Queues* → `ticket_events`.
-3. Uygulamadan (http://localhost:8082) **bir bilet al** (Sefer Ara → Bilet Al →
-   koltuk seç → Satın Al).
-4. Worker terminalinde anında şu akışı göster:
-   `📥 Yeni bilet olayı alındı → 📧 E-posta → 📱 SMS → ✅ kaydedildi`.
-5. RabbitMQ arayüzünde kuyruktaki mesaj/teslim grafiğinin hareket ettiğini göster.
-6. Uygulamada **Biletlerim**'de bilete “🐇 Bildirim gönderildi” rozetinin geldiğini göster.
+2. Tarayıcıda **http://localhost:15672** (guest/guest) → *Queues* → `ticket_events`
+   → **Consumers = 0** olduğunu göster.
+3. Uygulamadan sırayla: **yolcu kaydet**, **bilet al**, **o bileti iptal et** (3 işlem).
+4. ~8 sn bekle → RabbitMQ'da **Messages Ready = 3** (mesajlar kuyrukta bekliyor) —
+   istersen *Get messages* ile bir mesajın JSON içeriğini (`tip`, PNR…) göster.
+5. Worker'ı başlat ve logları izle:
+   ```bash
+   docker compose start worker && docker compose logs -f worker
+   ```
+   Üç farklı akışı göster:
+   `📥 YENİ YOLCU KAYDI → ✅`, `📥 BİLET ALMA → ✅`, `📥 BİLET İPTAL → ✅`.
+6. Uygulamada **Biletlerim**'de bilete “🐇 Bildirim gönderildi” rozetini ve
+   **İstatistik**'te `gönderilen_bildirim = 3` olduğunu göster.
 
+> Basit alternatif: worker açıkken işlemleri yap, logların gerçek zamanlı aktığını göster.
 > Tek komutla da kanıtlanır: `bash scripts/smoke_test.sh` → “Worker bildirimi işledi”.
 
 ---
