@@ -43,37 +43,11 @@ Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
   curl -s -D- "http://localhost:8000/api/seferler" -o /dev/null | grep X-Cache   # HIT
   ```
 
-## Sunum Videosu (Cep Telefonunda Gösterilmeli, Tüm ekip bir arada)
+## Sunum Videosu 
 
 > **Video Linki:** [Sunum — Gereksinim Demoları Videosu](https://www.youtube.com/watch?v=ukluw-g09GM)
 >
 > **Telefonda Gösterim Videosu:** [Mobil Uygulama — Telefon Gösterimi](https://youtube.com/shorts/mSNfchiUl70)
-
----
-
-## Sunum Videosunda Neler Olmalı
-
-### 1. Grup Lideri - Açılış Konuşması (1-2 dakika)
-
-**Konuşma İçeriği:**
-- Grup adının tanıtılması (Biletal)
-- Projenin genel tanıtımı ve amacı (mikroservis tabanlı otobüs bileti otomasyonu)
-- Sunumun yapısının kısaca açıklanması
-
-**Örnek Konuşma:**
-> "Merhaba, ben Betül Erkoç. Biletal projesini geliştirdim. Bu proje, bir otobüs
-> firmasının bilet satış, sefer yönetimi ve yolcu kayıt süreçlerini dijitalleştiren
-> mikroservis tabanlı bir Otobüs Bileti Otomasyon Sistemidir. Şimdi sorumlu olduğum
-> gereksinimleri çalışır durumda göstereceğim."
-
----
-
-### 2. Ekip Üyesi - Kişisel Tanıtım ve Gereksinim Sunumu
-
-#### Betül Erkoç
-**Kişisel Tanıtım:**
-- İsim: Betül Erkoç
-- Rol: Grup Lideri — Tam Yığın (REST API, Mobil, Web, Mobil Backend)
 
 **Gereksinimler ve Demolar:**
 
@@ -117,39 +91,3 @@ Bilet Satın Alma (satın alma), Bilet İptal Etme (iptal).
     - API Metodu: `GET /api/istatistik`
     - Demo: İstatistik ekranında özet kartlar (toplam sefer/yolcu/bilet, gelir, bildirim)
 
----
-
-### 3. Grup Lideri - Kapanış Konuşması (1 dakika)
-
-**Örnek Konuşma:**
-> "Bugün Biletal projemizi sundum. 10 gereksinimin tamamı çalışır durumda;
-> ayrıca Redis önbellekleme, RabbitMQ mesaj kuyruğu ve Jenkins ile CI/CD süreçleri
-> canlı olarak gösterildi. Teşekkürler!"
-
----
-
-## Sunum Hazırlık Kontrol Listesi
-
-### Genel Hazırlık
-- [ ] Açılış konuşması hazırlandı
-- [ ] Tüm gereksinimler çalışır durumda (`bash scripts/smoke_test.sh` geçiyor)
-- [ ] Demo senaryoları ve test verileri hazır (`bash scripts/reset.sh`)
-
-### Teknik Hazırlık
-- [ ] Tüm servisler ayakta (`docker compose ps`)
-- [ ] Jenkins ayakta (http://localhost:8091)
-- [ ] Mikrofon ve ekran kaydı test edildi (kendi sesiniz duyulmalı)
-
-### İçerik Hazırlık
-- [ ] CI-CD/Docker videosu çekildi
-- [ ] RabbitMQ videosu çekildi
-- [ ] Redis videosu çekildi
-- [ ] Sunum videosu (cep telefonunda, mobil arayüz) çekildi
-
----
-
-## Zaman Yönetimi
-
-- **Açılış:** 1-2 dakika
-- **Gereksinim Sunumu:** Her gereksinim ~1-1.5 dakika (toplam ~10-15 dakika)
-- **Kapanış:** 1 dakika
